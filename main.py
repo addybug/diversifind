@@ -201,7 +201,7 @@ def unlike():
   #should only work if logged on and if its a post request
   if request.method=="POST" and session['loggedin']:
     #remove business from favorites database based on user, business name and business zip code
-    sql('DELETE FROM favs WHERE (USER, FAV, ZIP) = (?, ?, ?)', (
+    sql('DELETE FROM favs WHERE USER = ? AND FAV = ? AND ZIP = ?', (
         session['user'], request.form.get('business'),  request.form.get('zipCode')
     ))
   # directs back to search results
@@ -213,7 +213,7 @@ def unlikeDetails():
   #should only work if logged on and if its a post request
   if request.method=="POST" and session['loggedin']:
     #remove business from favorites database based on user, business name and business zip code
-    sql('DELETE FROM favs WHERE (USER, FAV, ZIP) = (?, ?, ?)', (
+    sql('DELETE FROM favs WHERE USER = ? AND FAV = ? AND ZIP = ?', (
         session['user'], request.form.get('business'),  request.form.get('zipCode')
     ))
   # directs back to details page
@@ -225,7 +225,7 @@ def unlikeFavorites():
   #should only work if logged on and if its a post request
   if request.method=="POST" and session['loggedin']:
     #remove business from favorites database based on user, business name and business zip code
-    sql('DELETE FROM favs WHERE (USER, FAV, ZIP) = (?, ?, ?)', (
+    sql('DELETE FROM favs WHERE USER = ? AND FAV = ? AND ZIP = ?', (
         session['user'], request.form.get('business'),  request.form.get('zipCode')
     ))
   # directs back to favorites page
@@ -238,7 +238,7 @@ def favorites():
   if "loggedin" in session:
     #compiles list of liked businesses from favorites database
     likedList = sql('SELECT FAV, ZIP, ADDR, CAT, PLACE from favs where USER = ?', (
-          session['user'],
+          session['user']
       ))
     # reformats data to be more accessable
     newLikedList = likedList
