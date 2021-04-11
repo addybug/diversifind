@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>DiversiFind</title>
+
+    <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type= "text/css" href= "static/styles/custom.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	</head>
+	<body class="businesses">
+    <div id = "results-page">
+      <div class="favorites-heading container-fluid">
+        <nav class="navbar navbar-expand-md">
+          <li class="nav-item logo">
+            <a class="d-flex logo-name" href="/">
+              <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+            </a>
+          </li>
+          <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+              {% if not session['loggedin'] %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/sign-up">Register</a>
+                </li>
+              {% else %}
+                <li class="nav-item dropdown dropleft">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hi, {{ session['user'] }}
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/favorites">My Favorites</a>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                  </div>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+        <div class="container">
+          <div class="row">
+            <h2 class="favorites-your"> Your Favorites </h2>
+          </div>
+        </div>
+      </div>
+      <div class="container">  
+        <div class="business-container">
+          {%for business in likedList %}
+            <div class="row results-row" id='grandparent{{business[0]}}'>
+              <div class="col-sm-6">
+                <a href = "{{url_for('details', name = business[0], zipcode = business[1], place_id = business[5])}}" class="business-title">
+                  <h2>{{business[0]}}</h2>
+                </a>
+              </div>
+              <div class="col-sm-6 d-flex justify-content-end flex-row align-items-start">
+                <button class="ugly" onclick="unlikeBus('{{business[0]}}','{{business[1]}}','{{business[2]}}','{{business[3]}}')" id='parent{{business[0]}}'>
+                  <div class="heart-selected" id='{{business[0]}}'></div>
+                </button>
+              </div>
+              <div class="col-sm-6">
+                <p>{{business[2]}}</p>
+              </div>
+              <div class="col-sm-6 d-flex justify-content-end flex-row align-items-end">
+                {%if business[4]%}
+                {%for category in business[4]%}
+                  <div class="cat-tag">
+                    {{category}}
+                  </div>
+                {%endfor%}
+                {%endif%}
+                
+              </div>
+            </div>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+	</body>
+
+  <script>
+
+    function unlikeBus(bus, zip, address, categoryStr){
+      document.getElementById(bus).classList.remove('heart-selected');
+      document.getElementById(bus).classList.add('heart-shape');
+      document.getElementById("grandparent"+bus).remove();
+      
+      $.ajax({
+        type:'POST',
+        url:'{{url_for("unlikeFavorites")}}',
+        data:{
+          business: bus,
+          zipCode: zip,
+          address: address,
+          category: categoryStr
+        },
+        dataType:"json"
+      });
+    };
+
+  
+  </script>
+
+</html>

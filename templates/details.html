@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>DiversiFind</title>
+
+    <!---->
+    <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type= "text/css" href= "{{url_for('static', filename='styles/custom.css')}}">
+
+    <!--Bootstrap Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS for Bootstrap-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Boostrap Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	</head>
+	<body id = "details-page">
+    <div>
+        <nav class="navbar navbar-expand-md">
+          <li class="nav-item logo">
+            <a class="d-flex logo-name" href="/">
+              <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+            </a>
+          </li>
+          <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+              {% if not session['loggedin'] %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/sign-up">Register</a>
+                </li>
+              {% else %}
+                <li class="nav-item dropdown dropleft">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hi, {{ session['user'] }}
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/favorites">My Favorites</a>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                  </div>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+        <div class="container details">
+          <div class="row">
+            <div class="bus-image">
+              {% if business["image"] %}
+                <img class="image-style" src="{{business['image']}}" height=500 />
+              {% endif %}
+            </div>
+            <div class="info-col">
+              <div class="d-flex">
+                <h1>{{ business["name"] }}</h1>
+
+                {%if session['loggedin']%}
+                    {% if business["businessLiked"] %}
+                      <button class="ugly displayed-heart" onclick="unlikeBus('{{business['name']}}','{{business['zipcode']}}','{{business['location']}}','{{business['category']}}', '{{business['place_id']}}')" id='parent{{business["name"]}}'>
+                        <div class="heart-selected" id='{{business["name"]}}'></div>
+                      </button>
+                    {% else %}
+                      <button class="ugly displayed-heart" onclick="likeBus('{{business['name']}}','{{business['zipcode']}}','{{business['location']}}','{{business['category']}}', '{{business['place_id']}}') " id='parent{{business["name"]}}'>
+                        <div class="heart-shape" id='{{business["name"]}}'></div>
+                      </button>
+                    {% endif %}
+                  {% endif %}
+                </div>
+
+              {% if business["category"] %}
+                <h3 class="text-muted">{{business["category"]}}</h3>
+              {% endif %}
+              {% if business['location']%}
+                <p> <strong>Address:</strong> {{business["location"]}}</p>
+              {% endif %}
+              {% if business['phone'] %}
+                <p> <strong>Phone:</strong> {{business["phone"]}}</p>
+              {% endif %}
+              {% if business['rating']%}
+                <p> <strong>Rating:</strong> {{business["rating"]}} </p>
+              {% endif %}
+              {% if business['description']%}
+                <p> <strong>Description:</strong> {{business["description"]}} </p>
+              {% endif %}
+              {% if business['url'] %}
+                <button onclick=" window.open('{{business['url']}}', '_blank')" target="_blank" class="btn homepage-button"><span class="search-btn">Learn More</span></button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      
+    </div>
+	</body>
+
+  <script>
+    $(window).resize(function () { 
+      $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);
+    });
+
+    $(window).ready(function () { 
+      $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);   
+    });
+
+    $(window).on('load', function () { 
+      $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);   
+    });
+
+    $(window).onhashchange(function () { 
+      $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);   
+    });
+
+    function likeBus(bus, zip, address, categoryStr, place_id){
+      document.getElementById(bus).classList.remove('heart-shape');
+      document.getElementById(bus).classList.add('heart-selected');
+      document.getElementById("parent" + bus).setAttribute("onClick", `unlikeBus("${bus}", "${zip}", "${address}", "${categoryStr}", "${place_id}")`);
+      $.ajax({
+        type:'POST',
+        url:'{{url_for("likeDetails")}}',
+        data:{
+          business: bus,
+          zipCode: zip,
+          address: address,
+          category: categoryStr,
+          place_id: place_id 
+        },
+        dataType:"json"
+      });
+    };
+
+    function unlikeBus(bus, zip, address, categoryStr, place_id){
+      document.getElementById(bus).classList.remove('heart-selected');
+      document.getElementById(bus).classList.add('heart-shape');
+      document.getElementById("parent"+bus).setAttribute("onClick", `likeBus("${bus}", "${zip}", "${address}", "${categoryStr}", "${place_id}")`);
+
+      $.ajax({
+        type:'POST',
+        url:'{{url_for("unlikeDetails")}}',
+        data:{
+          business: bus,
+          zipCode: zip,
+          address: address,
+          category: categoryStr,
+          place_id: place_id
+        },
+        dataType:"json"
+      });
+    };
+
+  </script>
+
+
+</html>

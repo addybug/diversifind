@@ -1,0 +1,12 @@
+[tool]
+[tool.poetry]
+authors = ["Your Name <you@example.com>"]
+name = "root"
+version = "0.0.0"
+description="flask template"
+[tool.poetry.dependencies]
+flask = "==1.0.2"
+python = "^3.8"
+python-dotenv = "^0.17.0"
+flask-login = "^0.5.0"
+bcrypt = "^3.2.0"

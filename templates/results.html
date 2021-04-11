@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>DiversiFind</title>
+
+    <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type= "text/css" href= "static/styles/custom.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	</head>
+	<body class="businesses">
+    <div id = "results-page">
+      <div class="results-heading container-fluid">
+        <nav class="navbar navbar-expand-md">
+          <li class="nav-item logo">
+            <a class="d-flex logo-name" href="/">
+              <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+            </a>
+          </li>
+          <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+              {% if not session['loggedin'] %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/sign-up">Register</a>
+                </li>
+              {% else %}
+                <li class="nav-item dropdown dropleft">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hi, {{ session['user'] }}
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/favorites">My Favorites</a>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                  </div>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+        <div class="container">
+          <div class="row">
+            <h2> Results for
+                <span class="user-preferences">{{filterCategorieStr}}</span> in <span class="user-preferences">{{city}}</span> </h2>
+          </div>
+          <div class="row">
+            <h3> {{filterStr}} </h3>
+          </div>
+
+            <form action = "/results" method = "post">
+            <div class="row">
+
+              <div class="col-sm-6 search-left">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="city" aria-describedby="cityHelp" placeholder="Enter city name" name ="city">
+                  <small id="emailHelp" class="form-text text-muted">Please enter the full name.</small>
+                </div>
+              </div>
+
+              <div class="col-sm-2 search-center">
+                <div class="dropdown filters">
+                  <button class="btn btn-secondary dropdown-toggle px-5 dropdown-custom" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filters
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="womanOwned" id="woman" name="woman">
+                      <label class="form-check-label" for="woman">
+                        Woman Owned
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="minorityOwned" id="minority" name = "minority">
+                      <label class="form-check-label" for="minority">
+                        Minority Owned
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="veteranOwned" id="veteran" name="veteran">
+                      <label class="form-check-label" for="veteran">
+                        Veteran Owned
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="serviceDisabledVeteranOwned" id="disabled" name="disabled">
+                      <label class="form-check-label" for="disabled">
+                        Service Disabled Veteran Owned
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-2 search-right">
+                <div class="dropdown categories">
+                  <button class="btn btn-secondary dropdown-toggle dropdown-custom px-4" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Arts & Entertainment" id="arts" name="arts">
+                      <label class="form-check-label" for="arts">
+                        Arts & Entertainment
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Food" id="food" name="food">
+                      <label class="form-check-label" for="food">
+                        Food
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Outdoors & Recreation" id="outdoors" name="outdoors">
+                      <label class="form-check-label" for="outdoors">
+                        Outdoors & Recreation
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Professional & Other Places" id="professional" name="professional">
+                      <label class="form-check-label" for="professional">
+                        Professional & Other Places
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Shop & Service" id="shop" name="shop">
+                      <label class="form-check-label" for="shop">
+                        Shop & Service
+                      </label>
+                    </div>
+                    <div class="form-check dropdown-item">
+                      <input class="form-check-input " type="checkbox" value="Travel & Transport" id="travel" name = "travel">
+                      <label class="form-check-label" for="travel">
+                        Travel & Transport
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <div class="col-sm-2">
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="btn homepage-button"><span class="search-btn">Search</span></button>
+              </div>
+            </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="container">  
+        <div class="business-container">
+          {%for business in businesses%}
+            <div class="row results-row">
+              
+              <div class="col-sm-6">
+                <a href = "{{url_for('details', name = business['nameURL'], zipcode = business['zip'], place_id = business['place_id'])}}" class="business-title">
+                  <h2 class="business-title">{{business["name"]}}</h2>
+                </a>
+              </div>
+              
+              <div class="col-sm-6 d-flex justify-content-end flex-row align-items-start">
+                {%if session['loggedin']%}
+                  {% if business["name"] in likedList %}
+                    <button class="ugly" onclick="unlikeBus('{{business['name']}}','{{business['zip']}}','{{business['address']}}','{{business['categoryStr']}}', '{{business['place_id']}}')" id='parent{{business["name"]}}'>
+                      <div class="heart-selected" id='{{business["name"]}}'></div>
+                    </button>
+                  {% else %}
+                    <button class="ugly" onclick="likeBus('{{business['name']}}','{{business['zip']}}','{{business['address']}}','{{business['categoryStr']}}', '{{business['place_id']}}')" id='parent{{business["name"]}}'>
+                      <div class="heart-shape" id='{{business["name"]}}'></div>
+                    </button>
+                  {% endif %}
+                {%endif%}
+              </div>
+              <div class="col-sm-6">
+                {%if business["address"]%}
+                  <p>{{business["address"]}}</p>
+                {%endif%}
+              </div>
+              <div class="col-sm-6 d-flex justify-content-end flex-row align-items-end">
+                {%for category in business["categories"]%}
+                  <div class="cat-tag">
+                    {{category}}
+                  </div>
+                {%endfor%}
+              </div>
+            </div>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+	</body>
+
+  <script>
+    function likeBus(bus, zip, address, categoryStr, place_id){
+      document.getElementById(bus).classList.remove('heart-shape');
+      document.getElementById(bus).classList.add('heart-selected');
+      document.getElementById("parent" + bus).setAttribute("onClick", `unlikeBus("${bus}", "${zip}", "${address}", "${categoryStr}", "${place_id}")`);
+      $.ajax({
+        type:'POST',
+        url:'{{url_for("like")}}',
+        data:{
+          business: bus,
+          zipCode: zip,
+          address: address,
+          category: categoryStr,
+          place_id: place_id 
+        },
+        dataType:"json"
+      });
+    };
+
+    function unlikeBus(bus, zip, address, categoryStr, place_id){
+      document.getElementById(bus).classList.remove('heart-selected');
+      document.getElementById(bus).classList.add('heart-shape');
+      document.getElementById("parent"+bus).setAttribute("onClick", `likeBus("${bus}", "${zip}", "${address}", "${categoryStr}", "${place_id}")`);
+
+      $.ajax({
+        type:'POST',
+        url:'{{url_for("unlike")}}',
+        data:{
+          business: bus,
+          zipCode: zip,
+          address: address,
+          category: categoryStr,
+          place_id: place_id
+        },
+        dataType:"json"
+      });
+    };
+
+  
+  </script>
+
+</html>
