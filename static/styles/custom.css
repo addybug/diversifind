@@ -234,6 +234,20 @@ label:focus,
   border-radius: 5px;
 }
 
+@media (min-height: 900px) {
+  .nav-link {
+      font-size: 40px !important;
+    }
+
+    .logo-image {
+      width: 120px !important;
+    }
+
+    .logo-text {
+      font-size: 40px;
+    }
+}
+
 .business-container {
   margin-top: 20px;
 }

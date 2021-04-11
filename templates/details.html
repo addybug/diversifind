@@ -31,12 +31,13 @@
         <!--navbar-->
         <nav class="navbar navbar-expand-md">
           <li class="nav-item logo">
-            <!---->
+            <!--link to homepage-->
             <a class="d-flex logo-name" href="/">
-              <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+              <img class="logo-image" src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5 class="logo-text"> DiversiFind </h5> </div>
             </a>
           </li>
           <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <!--login/account info buttons-->
             <ul class="navbar-nav ml-auto">
               {% if not session['loggedin'] %}
                 <li class="nav-item">
@@ -59,17 +60,20 @@
             </ul>
           </div>
         </nav>
+        <!--business details-->
         <div class="container details">
           <div class="row">
+            <!--image-->
             <div class="bus-image">
               {% if business["image"] %}
                 <img class="image-style" src="{{business['image']}}" height=500 />
               {% endif %}
             </div>
+            <!--info-->
             <div class="info-col">
               <div class="d-flex">
                 <h1>{{ business["name"] }}</h1>
-
+                <!--heart button-->
                 {%if session['loggedin']%}
                     {% if business["businessLiked"] %}
                       <button class="ugly displayed-heart" onclick="unlikeBus('{{business['name']}}','{{business['zipcode']}}','{{business['location']}}','{{business['category']}}', '{{business['place_id']}}')" id='parent{{business["name"]}}'>
@@ -83,6 +87,7 @@
                   {% endif %}
                 </div>
 
+              <!--details, if statements are to ensure details were found-->
               {% if business["category"] %}
                 <h3 class="text-muted">{{business["category"]}}</h3>
               {% endif %}
@@ -110,6 +115,7 @@
 	</body>
 
   <script>
+    //all of the window events set the width of the info section such that it fits nicely on the page
     $(window).resize(function () { 
       $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);
     });
@@ -126,6 +132,7 @@
       $('.info-col').css('width', `${parseInt($('.details').css("width"))-parseInt($('.bus-image').css("width"))-30}px`);   
     });
 
+    //when the heart is clicked the business is added to favorites database
     function likeBus(bus, zip, address, categoryStr, place_id){
       document.getElementById(bus).classList.remove('heart-shape');
       document.getElementById(bus).classList.add('heart-selected');
@@ -144,6 +151,7 @@
       });
     };
 
+    //when the heart is clicked again the business is removed from the favorites database
     function unlikeBus(bus, zip, address, categoryStr, place_id){
       document.getElementById(bus).classList.remove('heart-selected');
       document.getElementById(bus).classList.add('heart-shape');

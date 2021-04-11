@@ -3,33 +3,37 @@
 	<head>
 		<title>DiversiFind</title>
 
+    <!--favicon logo-->
     <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
 
+    <!--connect to Poppins font from google fonts-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
 
+    <!--connect to css style sheet-->
     <link rel="stylesheet" type= "text/css" href= "static/styles/custom.css">
 
-    <!-- Latest compiled and minified CSS -->
+    <!--Bootstrap Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Popper JS -->
+    <!-- Popper JS for Bootstrap-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
+    <!--Bootstrap Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	</head>
 	<body class="businesses">
     <div id = "results-page">
+      <!--heading consisting of Title, search bar, and a nice image-->
       <div class="results-heading container-fluid">
         <nav class="navbar navbar-expand-md">
           <li class="nav-item logo">
             <a class="d-flex logo-name" href="/">
-              <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+              <img class="logo-image" src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5 class="logo-text"> DiversiFind </h5> </div>
             </a>
           </li>
           <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
@@ -164,17 +168,19 @@
           </form>
         </div>
       </div>
+      <!--list of businesses-->
       <div class="container">  
         <div class="business-container">
           {%for business in businesses%}
             <div class="row results-row">
-              
+              <!--Business name-->
               <div class="col-sm-6">
                 <a href = "{{url_for('details', name = business['nameURL'], zipcode = business['zip'], place_id = business['place_id'])}}" class="business-title">
                   <h2 class="business-title">{{business["name"]}}</h2>
                 </a>
               </div>
               
+              <!--heart button-->
               <div class="col-sm-6 d-flex justify-content-end flex-row align-items-start">
                 {%if session['loggedin']%}
                   {% if business["name"] in likedList %}
@@ -193,6 +199,8 @@
                   <p>{{business["address"]}}</p>
                 {%endif%}
               </div>
+
+              <!--Business categories-->
               <div class="col-sm-6 d-flex justify-content-end flex-row align-items-end">
                 {%for category in business["categories"]%}
                   <div class="cat-tag">
@@ -208,6 +216,7 @@
 	</body>
 
   <script>
+    //when the heart is clicked the business is added to favorites database
     function likeBus(bus, zip, address, categoryStr, place_id){
       document.getElementById(bus).classList.remove('heart-shape');
       document.getElementById(bus).classList.add('heart-selected');
@@ -226,6 +235,7 @@
       });
     };
 
+    //when the heart is clicked again the business is removed from the favorites database
     function unlikeBus(bus, zip, address, categoryStr, place_id){
       document.getElementById(bus).classList.remove('heart-selected');
       document.getElementById(bus).classList.add('heart-shape');

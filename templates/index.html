@@ -3,14 +3,17 @@
 	<head>
 		<title>DiversiFind</title>
 
+    <!--favicon logo-->
     <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
 
+    <!--connect to Poppins from google font-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
     
+    <!--connect to css stylesheet-->
     <link rel="stylesheet" type= "text/css" href= "static/styles/custom.css">
 
-    <!-- Latest compiled and minified CSS -->
+    <!--Bootstrap Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- jQuery library -->
@@ -19,21 +22,21 @@
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
+    <!--Bootstrap Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	</head>
 	<body>
     <div id = "main-page">
-    <nav class="navbar navbar-expand-md">
+    <nav class="navbar navbar-expand-sm">
+      <!--logo and link to homepage-->
       <li class="nav-item logo">
         <a class="d-flex logo-name" href="/">
-          <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
+          <img class="logo-image" src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5 class="logo-text"> DiversiFind </h5> </div>
         </a>
       </li>
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+      <!--sign in bar/ account info-->
       <ul class="navbar-nav ml-auto">
-        
         {% if not session['loggedin'] %}
           <li class="nav-item">
             <a class="nav-link" href="/login">Login</a>
@@ -53,8 +56,9 @@
           </li>
         {% endif %}
       </ul>
-    </div>
-  </nav>
+      </nav>
+  
+    <!--title and search form-->
 		<h1 class = "text-center" id = "title">DiversiFind</h1>
     <form action = "/results" method = "post">
     <div class = "container">

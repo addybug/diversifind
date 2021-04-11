@@ -3,27 +3,31 @@
 	<head>
 		<title>DiversiFind</title>
 
+    <!--favicon logo-->
     <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
 
+    <!--connect to Poppins font from google fonts-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
     
+    <!--connect to css style sheet-->
     <link rel="stylesheet" type= "text/css" href= "static/styles/custom.css">
 
-    <!-- Latest compiled and minified CSS -->
+    <!--Bootstrap Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Popper JS -->
+    <!-- Popper JS for Bootstrap-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
+    <!--Bootstrap Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	</head>
 	<body class="login-body">
+    <!--alert if username already in use-->
     {% if msg %}
       <div class="alert alert-warning alert-dismissible fade show mx-auto" role="alert">
         <strong>Username is already taken.</strong>
@@ -32,6 +36,8 @@
         </button>
       </div>
     {% endif %}
+
+    <!--sign up form-->
     <div class="login-container">
       <div class="login-form">
         <h1>Sign Up</h1>

@@ -1,2 +1,6 @@
-Flask==1.0.2
 flask
+sqlite3 
+bcrypt
+dotenv
+re
+requests
