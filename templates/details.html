@@ -3,12 +3,14 @@
 	<head>
 		<title>DiversiFind</title>
 
-    <!---->
+    <!--favicon logo-->
     <link rel="shortcut icon" href="{{url_for('static', filename='images/diversify_logo2.png')}}"type="image/png">
 
+    <!--add Poppins from google fonts-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Source+Sans+Pro&display=swap" rel="stylesheet">
 
+    <!--link css style sheet-->
     <link rel="stylesheet" type= "text/css" href= "{{url_for('static', filename='styles/custom.css')}}">
 
     <!--Bootstrap Latest compiled and minified CSS -->
@@ -26,8 +28,10 @@
 	</head>
 	<body id = "details-page">
     <div>
+        <!--navbar-->
         <nav class="navbar navbar-expand-md">
           <li class="nav-item logo">
+            <!---->
             <a class="d-flex logo-name" href="/">
               <img src="{{url_for('static', filename='images/diversify_logo3.png')}}" width=50 /> <div class="align-self-center mx-5px"> <h5> DiversiFind </h5> </div>
             </a>
