@@ -237,8 +237,8 @@ def favorites():
   #only works if logged on
   if "loggedin" in session:
     #compiles list of liked businesses from favorites database
-    likedList = sql('SELECT FAV, ZIP, ADDR, CAT, PLACE from favs where USER = ?', (
-          session['user']
+    likedList = sql('SELECT FAV, ZIP, ADDR, CAT, PLACE FROM favs WHERE USER = ?', (
+          session['user'],
       ))
     # reformats data to be more accessable
     newLikedList = likedList
