@@ -35,15 +35,15 @@ def getSam(city, filters):
   # creates the parameter that filters the response
   if len(filters) != 0:
     filters = '+AND+('+':true)+OR+('.join([str(elem) for elem in filters]) +':true)'
-  else: 
+  else:
     filters = ''
 
-  # the parameters passed into the Sam request  
+  # the parameters passed into the Sam request
   samP = {
     'qterms':f'(samAddress.city:{city}){filters}',
     'api_key': os.environ.get('SAM_API'),
     'start':1,
-    'length':200
+    'length':150
   }
 
   # makes a request with the specified parameters
@@ -58,10 +58,10 @@ def getSam(city, filters):
         'nameURL': business['legalBusinessName'].replace(" ", "-").replace("'", ""),
         'zip': business['samAddress']['zip']
       })
-  
+
   return businesses
 
-# this function calls the Google Places Search API to categorize and filter the results based on the user's preference 
+# this function calls the Google Places Search API to categorize and filter the results based on the user's preference
 # The Places API lets you search for place information using a variety of categories, including establishments, prominent points of interest, and geographic locations.
 def getGoogle(businesses, filters):
 
@@ -83,7 +83,7 @@ def getGoogle(businesses, filters):
       business["place_id"] = venue["place_id"]
 
       business["categories"] = []
-      
+
       # beautifies the cateogires and then parses the categories into a list
       for cat in venue["types"]:
           business["categories"].append(cat.replace("_", " ").title())
@@ -102,7 +102,7 @@ def getGoogle(businesses, filters):
     except:
       businesses.pop(i)
   return businesses
-    
+
 
 # gets location details from the Google Places Details API
 def getDetails(place_id):

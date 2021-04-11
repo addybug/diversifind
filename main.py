@@ -1,18 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from scripts import script
-import sqlite3 
+import sqlite3
 import os
 import bcrypt
 from os.path import join, dirname
 from dotenv import load_dotenv
 import re
+from flask_sslify import SSLify
 
 #initialize env file
 dotenv_path = join(dirname(__file__), 'scripts/.env')
 load_dotenv(dotenv_path)
 
-#initialize web app
+#create Flask app
 app = Flask(__name__)
+sslify = SSLify(app)
 app.secret_key = os.environ.get('SECRET_KEY')
 
 #create database
@@ -45,15 +47,15 @@ def index():
 #login page
 @app.route('/login', methods = ["POST", "GET"])
 def login():
-  
+
   #if login form was submitted, a post request is used
   if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-    
+
     #gets password for username
     pas = sql('SELECT PASS FROM users WHERE USER = ?', (
       request.form['username'],
     ))
-    
+
     # If account exists in accounts table  and password matches the hash
     if len(pas)>0 and bcrypt.checkpw(request.form["password"].encode(encoding='UTF-8'), pas[0][0]):
       # Create session cookie, we can access this data in other routes
@@ -63,7 +65,7 @@ def login():
     else:
       # Account doesnt exist or username/password incorrect
       return render_template('login.html', msg=True)
-  
+
   #default login form through get request
   if request.method =="GET":
     return render_template('login.html', msg=False)
@@ -78,7 +80,7 @@ def signUp():
       request.form['username'],
     ))
 
-    # exist should be empty if no user exists with that username 
+    # exist should be empty if no user exists with that username
     if exist == []:
 
       sql('INSERT INTO users (USER, PASS) VALUES (?, ?)', (
@@ -98,7 +100,7 @@ def signUp():
 @app.route('/results', methods = ["POST"])
 def search_results():
   if request.method== "POST":
-    
+
     # creates a list of all of the filters the user specified in their search
     filters = []
     if "minority" in request.form:
@@ -146,14 +148,14 @@ def search_results():
       for bus in likedList:
         newLikedList.append(bus[0])
       likedList = newLikedList
-      
+
     # calls the Sam API to get businesses in the city specified with the specified filters
     businesses = script.getSam(request.form["city"], filters)
-    
+
     # calls the Google Places API to get the businesses from the list Sam API generated that fit the specified category filters
     businesses = script.getGoogle(businesses, filterCategories)
-    
-    # beautifies the categoires 
+
+    # beautifies the categoires
     for b in businesses:
       b["categoryStr"] = ", ".join(b["categories"])
 
@@ -252,14 +254,14 @@ def favorites():
 #details page, takes name of business, business zip code, and business google places id in url
 @app.route("/details/<name>/<zipcode>/<place_id>")
 def details(name, zipcode, place_id):
-  #reformats name 
+  #reformats name
   name = name.replace('-', ' ')
   #makes a request to Google Places API
   googleInfo = script.getDetails(place_id)
 
   #categories to be removed
   catRemove = ["Point Of Interest", "Establishment"]
-  
+
   #finds business categories
   categories = []
   for cat in googleInfo['result']["types"]:
@@ -281,7 +283,7 @@ def details(name, zipcode, place_id):
   else:
     googleLocation = None
   googleZip = zipcode
-  
+
   if 'rating' in googleInfo['result']:
     googleRating = googleInfo['result']['rating']
   else:
@@ -296,20 +298,20 @@ def details(name, zipcode, place_id):
     googleDescription = googleInfo['result']['reviews'][0]['text']
   else:
     googleDescription = None
-  
+
   if 'photos' in googleInfo['result'] and len(googleInfo['result']['photos'])>0:
-    googleImage = "https://maps.googleapis.com/maps/api/place/photo?maxheight=600&photoreference="+googleInfo['result']['photos'][0]['photo_reference']+"&key="+os.environ.get('GOOGLE_KEY')
+    googleImage = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference="+googleInfo['result']['photos'][0]['photo_reference']+"&key="+os.environ.get('GOOGLE_KEY')
   else:
     googleImage = None
-    
+
   #if logged in, then checks if business is in favorites database
   if "loggedin" in session:
-    ids = sql('SELECT ID from favs where (USER, FAV, ZIP) = (?,?,?) ', (
+    ids = sql('SELECT ID FROM favs WHERE USER = ? AND FAV = ? AND ZIP = ?', (
           session['user'], name, zipcode
       ))
     if len(ids)>0:
       liked = True
-    else: 
+    else:
       liked = False
   else:
     liked = False
@@ -328,10 +330,11 @@ def details(name, zipcode, place_id):
     'description': googleDescription,
     'businessLiked': liked
   }
-  
+
   #renders template using business dictionary
   return render_template("details.html", business=business)
 
 
-#starts the web app
-app.run(host='0.0.0.0', port=8080)
+if __name__ == '__main__':
+    # This is used when running locally. See entrypoint in app.yaml.
+    app.run(host='0.0.0.0', port=8080, debug=True)

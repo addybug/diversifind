@@ -1,6 +1,6 @@
-flask
-sqlite3 
+Flask==1.1.2
+gunicorn==20.0.4
 bcrypt
-dotenv
-re
+python-dotenv
 requests
+flask-sslify
